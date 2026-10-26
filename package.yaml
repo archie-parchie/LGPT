@@ -18,6 +18,14 @@ dependencies:
 - containers
 - mtl
 - time
+- parser-combinators
+- wreq
+- lens
+- lens-aeson
+- aeson 
+- text
+- dotenv
+- bytestring
 
 default-extensions:
 - TypeSynonymInstances

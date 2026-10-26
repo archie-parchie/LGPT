@@ -41,19 +41,20 @@ import LGPT.TUI qualified as TUI
 import LGPT.Numbers
 import qualified Data.Text as T
 import LGPT.Helpers (prompt)
-
+import Control.Monad.State
+import qualified Data.Map as Map
 
 
 main :: IO ()
 main = do
   clearScreen
 
-  [o1, o2, o3, o4, o6a, o6b, o6c, o7a, o7b, o8a, o8b] <- mapM 
+  [o1, o2, o3, o4, o6a, o6b, o6c, o7a, o7b, o8a, o8b] <- mapM
     getλGPTResults
     [ ["Hello"]
     , ["What day is it?"]
     , ["What day is it tomorrow?"]
-    , ["How long ago was 2026-02-14?"] 
+    , ["How long ago was 2026-02-14?"]
     , ["What is two plus three times four?"]
     , ["What is one hundred minus fifty?"]
     , ["What is ten times ten plus ten?"]
@@ -63,9 +64,9 @@ main = do
     , ["What is two plus three?", "What is that times that?"]
     ]
 
-  let 
+  let
     tests = testGroup "Tests"
-      [ 
+      [
         -- longformNumberTests
         -- , longformPropertyTest
         testGroup "Part Zero" [
@@ -90,13 +91,13 @@ main = do
         ]
       , testGroup "Part Three" [
           testCase "Exercise 7: Remember that the sky is blue. / Tell me about the sky." $
-            checkExercise o7a 
+            checkExercise o7a
             ["Okay\\.","Sure - the sky is blue\\."]
         , testCase "Exercise 7: Tell me about computers." $
-            checkExercise o7b 
+            checkExercise o7b
               ["Sorry, I don't know anything about computers\\."]
         , testCase "Exercise 8: What is that plus two?" $
-            checkExercise o8a 
+            checkExercise o8a
               ["I haven't evaluated anything yet\\."]
         , testCase "Exercise 8: What is two plus three? / What is that times that?" $
             checkExercise o8b
@@ -109,7 +110,7 @@ main = do
 
 -- | Get the output of running λGPT with a given list of input lines.
 getλGPTResults :: [String] -> IO String
-getλGPTResults input = runWithInput TUI.runREPL $ unlines input
+getλGPTResults input = runWithInput (evalStateT TUI.runREPL Map.empty) $ unlines input
 
 
 -- | Check that λGPT gives back output matching a given regular expression, for a given input.
@@ -118,9 +119,24 @@ checkExercise output expectedRegexes = do
   forM_ expectedRegexes $ \expectedRegex -> do
     if output =~ expectedRegex
     then pure ()
-    else assertFailure $ 
-      "Expected output to match this regex:\n" ++ unlines expectedRegexes ++ 
-      "\nFull output:\n" ++ 
+    else assertFailure $
+      "Expected output to match this regex:\n" ++ unlines expectedRegexes ++
+      "\nFull output:\n" ++
+        -- remove occurrences of the prompt from the output
+        -- remove occurrences of the prompt from the output
+        -- remove occurrences of the prompt from the output
+        -- remove occurrences of the prompt from the output
+        -- remove occurrences of the prompt from the output
+        -- remove occurrences of the prompt from the output
+        -- remove occurrences of the prompt from the output
+        -- remove occurrences of the prompt from the output
+        -- remove occurrences of the prompt from the output
+        -- remove occurrences of the prompt from the output
+        -- remove occurrences of the prompt from the output
+        -- remove occurrences of the prompt from the output
+        -- remove occurrences of the prompt from the output
+        -- remove occurrences of the prompt from the output
+        -- remove occurrences of the prompt from the output
         -- remove occurrences of the prompt from the output
         T.unpack (T.replace (T.pack prompt) mempty $ T.pack output)
 
